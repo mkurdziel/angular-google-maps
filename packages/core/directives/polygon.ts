@@ -252,9 +252,8 @@ export class AgmPolygon implements OnDestroy, OnChanges, AfterContentInit {
       this._subscriptions.push(os);
     });
 
-    const os = this._polygonManager.createEventObservable('mouseup', this).subscribe((ev: Promise<Array<any>>) => this.pathChanged.emit(this.getPolygonPath()));
+    const os = this._polygonManager.createEventObservable('mouseup', this).subscribe(() => this.pathChanged.emit(this.getPolygonPath()));
     this._subscriptions.push(os);
-    
   }
 
   private _updatePolygonOptions(changes: SimpleChanges): PolygonOptions {
