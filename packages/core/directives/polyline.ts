@@ -219,6 +219,9 @@ export class AgmPolyline implements OnDestroy, OnChanges, AfterContentInit {
       const os = this._polylineManager.createEventObservable(obj.name, this).subscribe(obj.handler);
       this._subscriptions.push(os);
     });
+
+	const os = this._polylineManager.createEventObservable('mouseup', this).subscribe(() => this.pathChanged.emit(this.getPolylinePath()));
+    this._subscriptions.push(os);
   }
 
   getPolylinePath(): Promise<Array<any>> {
