@@ -144,6 +144,11 @@ export class AgmPolyline implements OnDestroy, OnChanges, AfterContentInit {
   @Output() lineRightClick: EventEmitter<PolyMouseEvent> = new EventEmitter<PolyMouseEvent>();
 
   /**
+   * This event is fired when the Polygon's underlying path is changed
+   */
+  @Output() pathChanged: EventEmitter<any> = new EventEmitter<any>();
+
+  /**
    * @internal
    */
   @ContentChildren(AgmPolylinePoint) points: QueryList<AgmPolylinePoint>;
@@ -187,6 +192,7 @@ export class AgmPolyline implements OnDestroy, OnChanges, AfterContentInit {
         k => AgmPolyline._polylineOptionsAttributes.indexOf(k) !== -1);
     optionKeys.forEach(k => options[k] = changes[k].currentValue);
     this._polylineManager.setPolylineOptions(this, options);
+    this.pathChanged.emit(this.getPolylinePath());
   }
 
   private _init() {
@@ -215,6 +221,10 @@ export class AgmPolyline implements OnDestroy, OnChanges, AfterContentInit {
     });
   }
 
+  getPolylinePath(): Promise<Array<any>> {
+     return this._polylineManager.getPathForPolyline(this);
+  }
+
   /** @internal */
   _getPoints(): Array<AgmPolylinePoint> {
     if (this.points) {
@@ -229,6 +239,7 @@ export class AgmPolyline implements OnDestroy, OnChanges, AfterContentInit {
   /** @internal */
   ngOnDestroy() {
     this._polylineManager.deletePolyline(this);
+    this.pathChanged.emit(this.getPolylinePath());
     // unsubscribe all registered observable subscriptions
     this._subscriptions.forEach((s) => s.unsubscribe());
   }

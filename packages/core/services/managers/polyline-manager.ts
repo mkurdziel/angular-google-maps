@@ -52,6 +52,12 @@ export class PolylineManager {
     return this._polylines.get(line).then((l: Polyline) => { l.setOptions(options); });
   }
 
+  getPathForPolyline(line: AgmPolyline): Promise<Array<any>> {
+    return this._polylines.get(line).then((polyline: any) => {
+      return polyline.getPath().getArray();
+    });
+  }
+
   deletePolyline(line: AgmPolyline): Promise<void> {
     const m = this._polylines.get(line);
     if (m == null) {
